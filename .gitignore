@@ -1,4 +1,4 @@
-# Unity (progetto BeatSaberAlefy)
+# Unity (progetto in meta/BeatSaberAlefy/BeatSaberAlefy)
 [Bb]uild/
 [Ll]ibrary/
 [Oo]bj/
@@ -80,6 +80,8 @@ Desktop.ini
 *.env
 secrets.json
 credentials.json
+# Token Alefy: asset con AuthToken (creare in Unity e incollare il token)
+BeatSaberAlefy/BeatSaberAlefy/Assets/Resources/Settings/AlefySettings.asset
 
 # Altro
 *.log

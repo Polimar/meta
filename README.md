@@ -131,19 +131,13 @@ meta/
 ├── README.md           ← istruzioni (questo file)
 ├── PLAN.md             ← piano di progetto completo
 ├── .gitignore          ← ignora Library, Temp, build, secret, ecc.
-└── BeatSaberAlefy/     ← progetto Unity (apri questa cartella in Unity)
-    ├── Assets/
-    │   ├── Alefy/      → client API alefy (da implementare)
-    │   ├── Audio/      → RhythmAnalyzer, RhythmData
-    │   ├── BeatMap/    → BeatMapGenerator, SpawnController
-    │   ├── VR/         → XR Origin, Saber, input
-    │   ├── Environment/
-    │   ├── Cubes/
-    │   ├── UI/
-    │   └── Settings/
-    ├── ProjectSettings/
-    ├── Packages/
-    └── ...
+└── BeatSaberAlefy/
+    └── BeatSaberAlefy/ ← progetto Unity (apri QUESTA cartella in Unity)
+        ├── Assets/
+        │   ├── Alefy/, Audio/, BeatMap/, VR/, UI/, Settings/, ...
+        ├── ProjectSettings/
+        ├── Packages/
+        └── ...
 ```
 
 Dettaglio in [PLAN.md – Struttura progetto Unity](PLAN.md#struttura-progetto-unity-suggerita).
@@ -156,7 +150,7 @@ Dettaglio in [PLAN.md – Struttura progetto Unity](PLAN.md#struttura-progetto-u
 
 1. Apri **Unity Hub**.
 2. **Add** → **Add project from disk**.
-3. Seleziona la cartella **`BeatSaberAlefy`** (non la root `meta`).
+3. Seleziona la cartella **`BeatSaberAlefy/BeatSaberAlefy`** (percorso completo: `meta/BeatSaberAlefy/BeatSaberAlefy`). È l’unica cartella progetto Unity.
 4. Doppio clic sul progetto per aprirlo.
 
 ### In Cursor (o VS Code)
