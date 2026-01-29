@@ -2,7 +2,7 @@
 
 ## Stack e prerequisiti
 
-- **Engine**: Unity 2022 LTS (o 2021 LTS) – supporto Oculus Rift S e XR Interaction Toolkit maturo.
+- **Engine**: Unity 6 LTS o Unity 2022 LTS (o 2021 LTS) – supporto Oculus Rift S e XR Interaction Toolkit maturo.
 - **VR**: Oculus XR Plugin + XR Interaction Toolkit (controller, tracking, input).
 - **Piattaforma**: Windows, build PC per Rift S (OpenXR/Oculus).
 - **Linguaggio**: C# (Unity); eventuale servizio/script per analisi ritmo in C# o tool esterno.
@@ -35,12 +35,12 @@ c:\Users\Valerio\meta\
 | Programma | Versione / note | A cosa serve |
 | --------- | ----------------- | ------------ |
 | **Unity Hub** | Ultima LTS | Gestione installazioni Unity e progetti |
-| **Unity** | 2022 LTS (es. 2022.3.x) | Engine di gioco |
+| **Unity** | 6 LTS (es. 6000.3.x) o 2022 LTS | Engine di gioco |
 | **Cursor** o **Visual Studio** o **VS Code** | VS 2022 con workload “Game development with Unity” o VS Code + C# extension | IDE per C# e debug |
 | **Oculus App** (Meta Quest / Rift) | Ultima da [meta.com/quest/setup](https://www.meta.com/quest/setup) o [oculus.com/setup](https://www.oculus.com/setup) | Driver e runtime per Rift S; necessario per test in VR |
 | **Git** | 2.x | Versionamento (repo `meta`) |
 
-**Installazione Unity**: da Unity Hub aggiungi modulo **Unity 2022 LTS** e, per il build target **Windows**, il modulo **Windows Build Support**. Se usi Visual Studio come editor aggiungi anche **Microsoft Visual Studio Community**; con **Cursor** o **VS Code** non serve: in Unity imposta *Edit → Preferences → External Tools → External Script Editor* su Cursor (o VS Code). Poi nel progetto Unity, da Package Manager: **Oculus XR Plugin**, **XR Interaction Toolkit**, **OpenXR Plugin** (se richiesto da Oculus).
+**Installazione Unity**: da Unity Hub aggiungi modulo **Unity 6 LTS** o **Unity 2022 LTS** e, per il build target **Windows**, il modulo **Windows Build Support**. Se usi Visual Studio come editor aggiungi anche **Microsoft Visual Studio Community**; con **Cursor** o **VS Code** non serve: in Unity imposta *Edit → Preferences → External Tools → External Script Editor* su Cursor (o VS Code). Poi nel progetto Unity, da Package Manager: **Oculus XR Plugin**, **XR Interaction Toolkit**, **OpenXR Plugin** (se richiesto da Oculus).
 
 **Opzionali**
 
@@ -220,7 +220,7 @@ Assets/
 
 | Componente    | Scelta                                                            |
 | ------------- | ----------------------------------------------------------------- |
-| Engine        | Unity 2022 LTS                                                    |
+| Engine        | Unity 6 LTS o Unity 2022 LTS                                      |
 | VR            | Oculus XR Plugin + XR Interaction Toolkit (Rift S)                |
 | Canzoni       | Client API alefy (dettagli da tua docs) → audio + metadati        |
 | Analisi ritmo | C# in Unity (es. AudioSync-style BPM+offset o onset) → RhythmData |

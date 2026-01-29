@@ -3,7 +3,7 @@
 ## Apertura in Unity
 
 1. Apri **Unity Hub** e aggiungi il progetto: **Add** → **Add project from disk** → seleziona la cartella **BeatSaberAlefy** (non la root `meta`).
-2. Usa **Unity 2022 LTS** (es. 2022.3.x). Se i pacchetti XR mancano, da **Window → Package Manager** aggiungi **Oculus XR Plugin** e **XR Interaction Toolkit**.
+2. Usa **Unity 6 LTS** (es. 6000.3.x) o **Unity 2022 LTS**. Se i pacchetti XR mancano, da **Window → Package Manager** aggiungi **Oculus XR Plugin** e **XR Interaction Toolkit**.
 
 ## Setup iniziale (prefab e scene)
 

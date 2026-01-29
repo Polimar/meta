@@ -21,7 +21,7 @@ Gioco VR in stile Beat Saber per **Oculus Rift S**: ambiente sci-fi, cubi che ar
 ## Panoramica
 
 - **Piattaforma**: Windows, Oculus Rift S.
-- **Engine**: Unity 2022 LTS.
+- **Engine**: Unity 6 LTS o Unity 2022 LTS.
 - **Flusso**: scelta canzone da alefy → download/audio → analisi ritmo (BPM, offset, beat grid) → “Tutto pronto” → avvio partita → cubi a tempo, slice con spade laser.
 - **Stile**: ambiente fantascientifico, neon, cubi colorati, spade con trail.
 
@@ -56,7 +56,7 @@ Dettaglio in [PLAN.md – Risorse hardware](PLAN.md#risorse-hardware-per-dimensi
 | Software | Uso |
 |----------|-----|
 | **Unity Hub** | Gestione installazioni Unity e progetti. |
-| **Unity 2022 LTS** | Engine di gioco. Da Hub: aggiungi modulo **Windows Build Support**. |
+| **Unity 6 LTS** o **Unity 2022 LTS** | Engine di gioco. Da Hub: aggiungi modulo **Windows Build Support**. |
 | **Cursor** (o VS Code / Visual Studio) | IDE per C#. In Cursor: estensione **C#** (Microsoft). |
 | **Oculus App** | [Download](https://www.meta.com/quest/setup) – driver e runtime per Rift S. |
 | **Git** | Clonazione e versionamento. |
