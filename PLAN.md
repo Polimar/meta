@@ -7,6 +7,73 @@
 - **Piattaforma**: Windows, build PC per Rift S (OpenXR/Oculus).
 - **Linguaggio**: C# (Unity); eventuale servizio/script per analisi ritmo in C# o tool esterno.
 
+---
+
+## Ambiente di sviluppo
+
+**Percorso consigliato**: tutto il progetto vive nel repo `meta`. Il progetto Unity in una sottocartella dedicata:
+
+```
+c:\Users\Valerio\meta\
+├── PLAN.md
+├── .gitignore          (ignora BeatSaberAlefy/Library, Temp, ecc.)
+└── BeatSaberAlefy\     ← root progetto Unity (apri questa cartella in Unity)
+    ├── Assets\
+    ├── ProjectSettings\
+    ├── Packages\
+    └── ...
+```
+
+**Sistema operativo consigliato**: **Windows 10/11 (64-bit)**. L’Oculus Rift S e il software Oculus/Meta sono supportati ufficialmente solo su Windows; Unity + Oculus XR Plugin sono testati su Windows. Sviluppare lo stesso progetto su macOS/Linux è possibile ma non puoi testare il Rift S su quella macchina.
+
+---
+
+## Programmi e dipendenze da installare
+
+**Obbligatori**
+
+| Programma | Versione / note | A cosa serve |
+| --------- | ----------------- | ------------ |
+| **Unity Hub** | Ultima LTS | Gestione installazioni Unity e progetti |
+| **Unity** | 2022 LTS (es. 2022.3.x) | Engine di gioco |
+| **Cursor** o **Visual Studio** o **VS Code** | VS 2022 con workload “Game development with Unity” o VS Code + C# extension | IDE per C# e debug |
+| **Oculus App** (Meta Quest / Rift) | Ultima da [meta.com/quest/setup](https://www.meta.com/quest/setup) o [oculus.com/setup](https://www.oculus.com/setup) | Driver e runtime per Rift S; necessario per test in VR |
+| **Git** | 2.x | Versionamento (repo `meta`) |
+
+**Installazione Unity**: da Unity Hub aggiungi modulo **Unity 2022 LTS** e, per il build target **Windows**, il modulo **Windows Build Support**. Se usi Visual Studio come editor aggiungi anche **Microsoft Visual Studio Community**; con **Cursor** o **VS Code** non serve: in Unity imposta *Edit → Preferences → External Tools → External Script Editor* su Cursor (o VS Code). Poi nel progetto Unity, da Package Manager: **Oculus XR Plugin**, **XR Interaction Toolkit**, **OpenXR Plugin** (se richiesto da Oculus).
+
+**Opzionali**
+
+- **GitHub Desktop** o **GitHub CLI** (`gh`): se preferisci un client grafico o CLI per push/pull.
+- **NAudio** (NuGet): solo se usi lettura audio avanzata in C# fuori da Unity; in Unity spesso basta `UnityEngine.Audio`.
+
+---
+
+## Risorse hardware per dimensionare la macchina
+
+**Minime (solo sviluppo, test VR leggero)**
+
+- **CPU**: Intel i5 / Ryzen 5 (6 core) o equivalente.
+- **RAM**: 16 GB (Unity + Visual Studio + Oculus + browser possono usare 12–14 GB).
+- **GPU**: dedicata NVIDIA GTX 1060 6 GB / AMD RX 580 o superiore (requisiti ufficiali Oculus Rift S).
+- **Disco**: SSD 256 GB minimo; Unity + Hub + un progetto possono usare 20–40 GB; meglio 512 GB per progetti e cache.
+- **Porte**: DisplayPort 1.2 (o Mini DisplayPort con adattatore) per Rift S + USB 3.0.
+
+**Consigliate (sviluppo fluido + test VR frequenti)**
+
+- **CPU**: Intel i7 / Ryzen 7 (8 core) o superiore.
+- **RAM**: 32 GB.
+- **GPU**: NVIDIA RTX 3060 / AMD RX 6600 o superiore (margine per editor Unity e VR contemporaneamente).
+- **Disco**: NVMe SSD 512 GB o 1 TB.
+- **Monitor**: 1080p o superiore; secondo monitor utile per doc e IDE mentre il Rift S è sul visore.
+
+**Riferimenti ufficiali**
+
+- [Requisiti di sistema Oculus Rift S](https://www.meta.com/quest/products/accessories/headsets/rift-s/)
+- [Requisiti Unity per Windows](https://docs.unity3d.com/Manual/system-requirements.html)
+
+---
+
 ## Architettura del flusso
 
 ```mermaid
