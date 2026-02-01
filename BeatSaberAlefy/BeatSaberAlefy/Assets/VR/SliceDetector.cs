@@ -26,6 +26,10 @@ namespace BeatSaberAlefy.VR
         {
             var col = GetComponent<Collider>();
             if (!col.isTrigger) col.isTrigger = true;
+            var rb = GetComponent<Rigidbody>();
+            if (rb == null) rb = gameObject.AddComponent<Rigidbody>();
+            rb.isKinematic = true;
+            rb.useGravity = false;
             ResolveAudioTime();
         }
 
@@ -69,14 +73,13 @@ namespace BeatSaberAlefy.VR
 
         void TrySlice(Collider other)
         {
-            var sliceable = other.GetComponentInParent<Sliceable>();
+            var sliceable = other.GetComponent<Sliceable>();
+            if (sliceable == null) sliceable = other.GetComponentInParent<Sliceable>();
             if (sliceable == null) return;
             Vector3 cutNormal = transform.forward;
+            Vector3 cutPosition = other.ClosestPoint(transform.position);
             float t = GetCurrentAudioTime();
-            if (sliceable.TrySlice(t, cutNormal, SaberLane))
-            {
-                // Slice valido: Sliceable ha già invocato OnSliced e disattivato se necessario
-            }
+            sliceable.TrySlice(t, cutPosition, cutNormal, SaberLane);
         }
     }
 }

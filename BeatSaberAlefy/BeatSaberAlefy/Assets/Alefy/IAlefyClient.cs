@@ -16,6 +16,8 @@ namespace BeatSaberAlefy.Alefy
         public float? BPM;
         public string AudioUrl;
         public float? DurationSeconds;
+        /// <summary>URL assoluto per la cover (GET /api/stream/tracks/:id/cover).</summary>
+        public string CoverArtUrl;
     }
 
     /// <summary>

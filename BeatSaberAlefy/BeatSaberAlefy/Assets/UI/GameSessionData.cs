@@ -12,6 +12,8 @@ namespace BeatSaberAlefy.UI
         public static AudioClip CurrentClip { get; set; }
         public static RhythmData CurrentRhythm { get; set; }
         public static BeatMapData CurrentBeatMap { get; set; }
+        /// <summary>TrackId della canzone in corso (per high score e statistiche).</summary>
+        public static string SelectedTrackId { get; set; }
 
         public static void Set(AudioClip clip, RhythmData rhythm, BeatMapData beatMap)
         {
@@ -25,6 +27,7 @@ namespace BeatSaberAlefy.UI
             CurrentClip = null;
             CurrentRhythm = null;
             CurrentBeatMap = null;
+            SelectedTrackId = null;
         }
     }
 }

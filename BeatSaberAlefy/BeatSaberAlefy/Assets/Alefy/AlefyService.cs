@@ -40,6 +40,7 @@ namespace BeatSaberAlefy.Alefy
         static AlefySongMetadata TrackToMetadata(AlefyTrackDto t, string baseUrl)
         {
             if (t == null) return null;
+            var baseUrlTrimmed = baseUrl.TrimEnd('/');
             return new AlefySongMetadata
             {
                 Id = t.id.ToString(),
@@ -47,7 +48,8 @@ namespace BeatSaberAlefy.Alefy
                 Artist = t.artist ?? "",
                 Album = t.album ?? "",
                 DurationSeconds = t.duration,
-                AudioUrl = baseUrl.TrimEnd('/') + "/api/stream/tracks/" + t.id
+                AudioUrl = baseUrlTrimmed + "/api/stream/tracks/" + t.id,
+                CoverArtUrl = baseUrlTrimmed + "/api/stream/tracks/" + t.id + "/cover"
             };
         }
 

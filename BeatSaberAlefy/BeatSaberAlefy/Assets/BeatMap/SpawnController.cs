@@ -37,13 +37,36 @@ namespace BeatSaberAlefy.BeatMap
 
         int _nextIndex;
         readonly List<GameObject> _activeCubes = new List<GameObject>();
+        int _logTicks;
+
+        static float GetSafeAudioTime(AudioSource src)
+        {
+            if (src == null || src.clip == null) return 0f;
+            if (src.clip.loadState != AudioDataLoadState.Loaded) return 0f;
+            return src.time;
+        }
 
         void Update()
         {
-            if (BeatMap == null || BeatMap.Entries == null || CubePrefab == null || AudioSource == null)
+#if UNITY_EDITOR
+            _logTicks++;
+            if (_logTicks == 60 || (_logTicks <= 5 && _logTicks % 1 == 0))
+            {
+                float audioTime = AudioSource != null ? GetSafeAudioTime(AudioSource) : -1f;
+                BeatSaberAlefy.UI.DebugLog.Write("SpawnController.Update", "Spawn state", "H2 H3 H4",
+                    ("BeatMapNull", BeatMap == null),
+                    ("EntriesLength", BeatMap?.Entries?.Length ?? -1),
+                    ("CubePrefabNull", CubePrefab == null),
+                    ("AudioSourceNull", AudioSource == null),
+                    ("AudioTime", audioTime),
+                    ("NextIndex", _nextIndex),
+                    ("AudioPlaying", AudioSource?.isPlaying ?? false));
+            }
+#endif
+            if (BeatMap == null || BeatMap.Entries == null || CubePrefab == null || AudioSource == null || AudioSource.clip == null)
                 return;
 
-            float t = AudioSource.time;
+            float t = GetSafeAudioTime(AudioSource);
 
             while (_nextIndex < BeatMap.Entries.Length)
             {
@@ -77,22 +100,38 @@ namespace BeatSaberAlefy.BeatMap
             right.y = 0f;
             right.Normalize();
 
-            Vector3 hitPos = (PlayerForward != null ? PlayerForward.position : transform.position)
-                + forward * HitDistance;
-            hitPos.y += GetHeightOffset(entry.Height);
-
+            Vector3 playerPos = PlayerForward != null ? PlayerForward.position : transform.position;
             float laneOffset = (entry.Lane == 0 ? -1f : 1f) * LaneOffset;
+            float heightOffset = GetHeightOffset(entry.Height);
+
+            Vector3 hitPos = playerPos + forward * HitDistance;
+            hitPos.y += heightOffset;
             hitPos += right * laneOffset;
 
-            Vector3 spawnPos = hitPos - forward * SpawnDistance;
-            spawnPos.y = hitPos.y;
+            Vector3 spawnPos = playerPos + forward * SpawnDistance;
+            spawnPos.y += heightOffset;
+            spawnPos += right * laneOffset;
 
             GameObject cube = Instantiate(CubePrefab, spawnPos, Quaternion.identity, transform);
+            var rb = cube.GetComponent<Rigidbody>();
+            if (rb == null) rb = cube.AddComponent<Rigidbody>();
+            rb.isKinematic = true;
+            rb.useGravity = false;
             var sliceable = cube.GetComponent<Sliceable>();
             if (sliceable != null)
             {
                 sliceable.BeatTime = entry.Time;
                 sliceable.Lane = entry.Lane;
+            }
+            var rend = cube.GetComponent<Renderer>();
+            if (rend != null)
+            {
+                Color laneColor = entry.Lane == 0 ? new Color(0.2f, 0.4f, 1f) : new Color(1f, 0.3f, 0.6f);
+                var block = new MaterialPropertyBlock();
+                rend.GetPropertyBlock(block);
+                block.SetColor("_BaseColor", laneColor);
+                block.SetColor("_Color", laneColor);
+                rend.SetPropertyBlock(block);
             }
 
             var mover = cube.GetComponent<CubeMover>();
@@ -124,6 +163,9 @@ namespace BeatSaberAlefy.BeatMap
                 var mover = go.GetComponent<CubeMover>();
                 if (mover != null && currentTime > mover.BeatTime + 0.5f)
                 {
+                    var sliceable = go.GetComponent<Sliceable>();
+                    if (sliceable != null && !sliceable.Sliced && GameState.Instance != null)
+                        GameState.Instance.OnMiss();
                     _activeCubes.RemoveAt(i);
                     Destroy(go);
                 }
@@ -148,7 +190,7 @@ namespace BeatSaberAlefy.BeatMap
         /// </summary>
         public float GetAudioTime()
         {
-            return AudioSource != null ? AudioSource.time : 0f;
+            return GetSafeAudioTime(AudioSource);
         }
     }
 }

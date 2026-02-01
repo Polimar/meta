@@ -13,11 +13,12 @@
    - **Assets/VR/Saber.prefab** – spada con SliceDetector
    - **Assets/Scenes/Menu.unity** – menu (Seleziona canzone, Analisi, Avvia partita)
    - **Assets/Scenes/Game.unity** – scena di gioco con GameplayDirector e SpawnController
-3. **BeatSaberAlefy → Setup → Add Scenes to Build Settings** per includere Menu e Game nel build.
+3. **BeatSaberAlefy → Setup → Add Scenes to Build Settings** per includere Menu e Game nel build (la **prima** scena deve essere **Menu** così il gioco parte dal menu).
+4. Se i pulsanti del menu non rispondono: **BeatSaberAlefy → Setup → Add EventSystem to scene** (usa Input System; se la scena ha già un EventSystem con modulo vecchio, viene sostituito).
 
 ## Test senza VR
 
-1. Apri la scena **Menu**. Collega i riferimenti UI a **MenuController** (Button Select Song, Analyze, Start Game, StatusText, PanelAnalyzing, PanelReady).
+1. Apri la scena **Menu**. Se l’hai creata con **Create Menu Scene**, i riferimenti a **MenuController** (Carica da Alefy, Cerca, Avvia, StatusText, lista tracce) sono già collegati; altrimenti collegali in Inspector.
 2. Metti un file audio in **Assets/Resources/Audio/** e rinominalo in **TestClip** (o crea un AudioClip e assegnarlo da codice/Resources).
 3. Play: Seleziona canzone → Analizza → Avvia partita. Si carica la scena Game con audio e cubi (senza XR Origin i cubi spawnano davanti alla camera).
 
