@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 using BeatSaberAlefy.Audio;
 using BeatSaberAlefy.BeatMap;
 using BeatSaberAlefy.UI;
@@ -34,12 +35,29 @@ namespace BeatSaberAlefy.VR
 
         void Start()
         {
+            // In Editor o se ci sono dati di test, non caricare il Menu immediatamente
+            // (DesktopTestBootstrap imposta i dati di test)
+#if UNITY_EDITOR
+            if (string.IsNullOrEmpty(GameSessionData.SelectedTrackId) && 
+                (GameSessionData.CurrentClip == null || GameSessionData.CurrentBeatMap == null))
+            {
+                // Aspetta un frame per dare tempo a DesktopTestBootstrap di eseguire
+                StartCoroutine(CheckAndLoadMenuDelayed());
+                return;
+            }
+#else
             if (string.IsNullOrEmpty(GameSessionData.SelectedTrackId))
             {
                 SceneManager.LoadScene(MenuSceneName);
                 return;
             }
+#endif
 
+            InitializeGameplay();
+        }
+
+        void InitializeGameplay()
+        {
             var menu = FindObjectOfType<MenuController>();
             if (menu != null)
                 menu.gameObject.SetActive(false);
@@ -128,5 +146,26 @@ namespace BeatSaberAlefy.VR
                 SpawnController.ResetSpawn();
             }
         }
+
+#if UNITY_EDITOR
+        System.Collections.IEnumerator CheckAndLoadMenuDelayed()
+        {
+            // Aspetta un frame per dare tempo a DesktopTestBootstrap
+            yield return null;
+            
+            // Se ancora non ci sono dati, carica il Menu
+            if (string.IsNullOrEmpty(GameSessionData.SelectedTrackId) && 
+                (GameSessionData.CurrentClip == null || GameSessionData.CurrentBeatMap == null))
+            {
+                Debug.Log("[GameplayDirector] Nessuna traccia selezionata, caricamento Menu...");
+                SceneManager.LoadScene(MenuSceneName);
+            }
+            else
+            {
+                // I dati sono stati impostati, continua normalmente
+                InitializeGameplay();
+            }
+        }
+#endif
     }
 }

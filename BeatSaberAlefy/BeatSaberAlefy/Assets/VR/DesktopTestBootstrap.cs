@@ -27,6 +27,8 @@ namespace BeatSaberAlefy.VR
             var beatMap = CreateDummyBeatMap(duration);
 
             GameSessionData.Set(clip, rhythm, beatMap);
+            // Imposta SelectedTrackId per evitare che GameplayDirector carichi il Menu
+            GameSessionData.SelectedTrackId = "test_track";
             Debug.Log("[DesktopTestBootstrap] Dati di test impostati (clip 10s, beat map con note ogni ~0.5s). Usa mouse: sinistro=left, destro=right.");
         }
 

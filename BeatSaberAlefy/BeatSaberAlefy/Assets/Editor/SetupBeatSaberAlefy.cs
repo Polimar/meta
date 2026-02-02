@@ -6,10 +6,14 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.InputSystem.XR;
 using BeatSaberAlefy.VR;
 using BeatSaberAlefy.BeatMap;
 using BeatSaberAlefy.UI;
 using BeatSaberAlefy.Alefy;
+using Unity.XR.CoreUtils;
+using System;
+using System.Reflection;
 
 namespace BeatSaberAlefy.Editor
 {
@@ -104,7 +108,7 @@ namespace BeatSaberAlefy.Editor
             string path = "Assets/Cubes/Cube.prefab";
             EnsureDirectory(path);
             PrefabUtility.SaveAsPrefabAsset(go, path);
-            Object.DestroyImmediate(go);
+            UnityEngine.Object.DestroyImmediate(go);
             Debug.Log($"Created {path}");
         }
 
@@ -117,7 +121,7 @@ namespace BeatSaberAlefy.Editor
             cylinder.transform.SetParent(go.transform, false);
             cylinder.transform.localScale = new Vector3(0.05f, 0.5f, 0.05f);
             cylinder.transform.localPosition = new Vector3(0, 0.5f, 0);
-            Object.DestroyImmediate(cylinder.GetComponent<Collider>());
+            UnityEngine.Object.DestroyImmediate(cylinder.GetComponent<Collider>());
             var box = go.AddComponent<BoxCollider>();
             box.isTrigger = true;
             box.size = new Vector3(0.1f, 1f, 0.1f);
@@ -127,7 +131,7 @@ namespace BeatSaberAlefy.Editor
             string path = "Assets/VR/Saber.prefab";
             EnsureDirectory(path);
             PrefabUtility.SaveAsPrefabAsset(go, path);
-            Object.DestroyImmediate(go);
+            UnityEngine.Object.DestroyImmediate(go);
             Debug.Log($"Created {path}");
         }
 
@@ -135,7 +139,7 @@ namespace BeatSaberAlefy.Editor
         static void CreateMenuScene()
         {
             var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
-            var cam = Object.FindFirstObjectByType<Camera>();
+            var cam = UnityEngine.Object.FindFirstObjectByType<Camera>();
             if (cam != null) cam.gameObject.name = "Main Camera";
 
             EnsureEventSystem();
@@ -335,7 +339,7 @@ namespace BeatSaberAlefy.Editor
             string path = "Assets/UI/TrackButton.prefab";
             EnsureDirectory(path);
             PrefabUtility.SaveAsPrefabAsset(go, path);
-            Object.DestroyImmediate(go);
+            UnityEngine.Object.DestroyImmediate(go);
             return AssetDatabase.LoadAssetAtPath<GameObject>(path);
         }
 
@@ -343,7 +347,7 @@ namespace BeatSaberAlefy.Editor
         static void CreateGameScene()
         {
             var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
-            var cam = Object.FindFirstObjectByType<Camera>();
+            var cam = UnityEngine.Object.FindFirstObjectByType<Camera>();
             if (cam != null) cam.gameObject.name = "Main Camera";
 
             EnsureEventSystem();
@@ -437,10 +441,10 @@ namespace BeatSaberAlefy.Editor
         static void AddLobbyUIToScene()
         {
             EnsureEventSystem();
-            var menu = Object.FindFirstObjectByType<MenuController>();
+            var menu = UnityEngine.Object.FindFirstObjectByType<MenuController>();
             if (menu == null)
             {
-                var canvas = Object.FindFirstObjectByType<Canvas>();
+                var canvas = UnityEngine.Object.FindFirstObjectByType<Canvas>();
                 if (canvas == null)
                 {
                     Debug.LogWarning("Nessun Canvas nella scena. Esegui prima Create Menu Scene.");
@@ -617,13 +621,13 @@ namespace BeatSaberAlefy.Editor
         [MenuItem(MenuRoot + "/Add Desktop Rig to current scene", false, 25)]
         static void AddDesktopRigToScene()
         {
-            var director = Object.FindFirstObjectByType<GameplayDirector>();
+            var director = UnityEngine.Object.FindFirstObjectByType<GameplayDirector>();
             if (director == null)
             {
                 Debug.LogWarning("Nessun GameplayDirector nella scena. Apri la scena Game o creala con Create Game Scene.");
                 return;
             }
-            var existing = Object.FindFirstObjectByType<DesktopRig>();
+            var existing = UnityEngine.Object.FindFirstObjectByType<DesktopRig>();
             if (existing != null)
             {
                 Debug.Log("DesktopRig già presente nella scena.");
@@ -644,18 +648,18 @@ namespace BeatSaberAlefy.Editor
         static void AddGameStateAndGameplayUIToScene()
         {
             EnsureEventSystem();
-            if (Object.FindFirstObjectByType<GameState>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<GameState>() == null)
             {
                 var go = new GameObject("GameState");
                 go.AddComponent<GameState>();
                 Debug.Log("GameState aggiunto.");
             }
-            if (Object.FindFirstObjectByType<GameplayUI>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<GameplayUI>() == null)
             {
                 CreateGameplayCanvas();
                 Debug.Log("GameplayCanvas con GameplayUI aggiunto.");
             }
-            var spawn = Object.FindFirstObjectByType<SpawnController>();
+            var spawn = UnityEngine.Object.FindFirstObjectByType<SpawnController>();
             if (spawn != null && spawn.CubePrefab == null)
             {
                 var cubePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Cubes/Cube.prefab");
@@ -676,7 +680,7 @@ namespace BeatSaberAlefy.Editor
                 return;
             }
             int count = 0;
-            foreach (var canvas in Object.FindObjectsByType<Canvas>(FindObjectsSortMode.None))
+            foreach (var canvas in UnityEngine.Object.FindObjectsByType<Canvas>(FindObjectsSortMode.None))
             {
                 if (!canvas.gameObject.activeSelf)
                 {
@@ -695,6 +699,271 @@ namespace BeatSaberAlefy.Editor
             }
             else
                 Debug.Log("Nessun oggetto UI disattivato trovato (Canvas, Panel, PanelGameOver).");
+        }
+
+        [MenuItem(MenuRoot + "/Add XR Origin (VR) to current scene", false, 15)]
+        static void AddXROriginToScene()
+        {
+            // Verifica se XR Origin esiste già
+            var existing = UnityEngine.Object.FindFirstObjectByType<XROrigin>();
+            if (existing != null)
+            {
+                Debug.LogWarning("XR Origin già presente nella scena. Selezionato quello esistente.");
+                Selection.activeGameObject = existing.gameObject;
+                EditorGUIUtility.PingObject(existing.gameObject);
+                return;
+            }
+
+            // Disabilita la vecchia Main Camera se esiste e non è parte di XR Origin
+            var oldCam = Camera.main;
+            if (oldCam != null && oldCam.GetComponent<TrackedPoseDriver>() == null)
+            {
+                oldCam.gameObject.SetActive(false);
+                Debug.Log("Vecchia Main Camera disabilitata.");
+            }
+
+            // Crea XR Origin
+            var xrOriginGo = new GameObject("XR Origin (VR)");
+            var xrOrigin = xrOriginGo.AddComponent<XROrigin>();
+            
+            // Crea Camera Offset
+            var cameraOffsetGo = new GameObject("Camera Offset");
+            cameraOffsetGo.transform.SetParent(xrOriginGo.transform, false);
+            cameraOffsetGo.transform.localPosition = Vector3.zero;
+            cameraOffsetGo.transform.localRotation = Quaternion.identity;
+
+            // Crea Main Camera
+            var cameraGo = new GameObject("Main Camera");
+            cameraGo.transform.SetParent(cameraOffsetGo.transform, false);
+            cameraGo.transform.localPosition = new Vector3(0, 1.1176f, 0); // Altezza standard VR
+            cameraGo.transform.localRotation = Quaternion.identity;
+            cameraGo.tag = "MainCamera";
+
+            var camera = cameraGo.AddComponent<Camera>();
+            camera.clearFlags = CameraClearFlags.Skybox;
+            camera.backgroundColor = new Color(0.192f, 0.302f, 0.475f, 0f);
+            camera.nearClipPlane = 0.01f;
+            camera.farClipPlane = 1000f;
+            camera.fieldOfView = 60f;
+            camera.depth = 0;
+            camera.stereoTargetEye = StereoTargetEyeMask.Both;
+
+            // Aggiungi TrackedPoseDriver per il tracking VR
+            var trackedPose = cameraGo.AddComponent<TrackedPoseDriver>();
+            trackedPose.trackingType = TrackedPoseDriver.TrackingType.RotationAndPosition;
+            trackedPose.updateType = TrackedPoseDriver.UpdateType.UpdateAndBeforeRender;
+
+            // Aggiungi AudioListener
+            cameraGo.AddComponent<AudioListener>();
+
+            // Configura XR Origin
+            xrOrigin.Camera = camera;
+            // OriginBaseGameObject non esiste più in Unity 6, viene gestito automaticamente
+            xrOrigin.CameraFloorOffsetObject = cameraOffsetGo;
+            xrOrigin.CameraYOffset = 1.1176f;
+            // Usa Floor per ambiente fisso (l'ambiente non ruota con la testa)
+            xrOrigin.RequestedTrackingOriginMode = XROrigin.TrackingOriginMode.Floor;
+
+            // Aggiungi InputActionManager (opzionale ma utile) - usa reflection per evitare dipendenze
+            try
+            {
+                var inputActionManagerType = Type.GetType("UnityEngine.XR.Interaction.Toolkit.Inputs.InputActionManager, Unity.XR.Interaction.Toolkit");
+                if (inputActionManagerType != null)
+                {
+                    var inputActionManager = xrOriginGo.AddComponent(inputActionManagerType);
+                    var inputActions = AssetDatabase.LoadAssetAtPath<UnityEngine.InputSystem.InputActionAsset>(
+                        "Assets/InputSystem_Actions.inputactions");
+                    if (inputActions != null)
+                    {
+                        var actionAssetsProp = inputActionManagerType.GetProperty("actionAssets");
+                        if (actionAssetsProp != null)
+                        {
+                            var list = new System.Collections.Generic.List<UnityEngine.InputSystem.InputActionAsset> { inputActions };
+                            actionAssetsProp.SetValue(inputActionManager, list);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"InputActionManager non disponibile: {ex.Message}");
+            }
+
+            // Assicurati che XR Interaction Manager esista nella scena - usa reflection
+            try
+            {
+                var xrManagerType = Type.GetType("UnityEngine.XR.Interaction.Toolkit.XRInteractionManager, Unity.XR.Interaction.Toolkit");
+                if (xrManagerType != null)
+                {
+                    var xrManager = UnityEngine.Object.FindFirstObjectByType(xrManagerType);
+                    if (xrManager == null)
+                    {
+                        var managerGo = new GameObject("XR Interaction Manager");
+                        managerGo.AddComponent(xrManagerType);
+                        Debug.Log("XR Interaction Manager aggiunto alla scena.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"XR Interaction Manager non disponibile: {ex.Message}");
+            }
+
+            // Collega GameplayDirector se esiste
+            var director = UnityEngine.Object.FindFirstObjectByType<GameplayDirector>();
+            if (director != null)
+            {
+                director.PlayerForward = cameraGo.transform;
+                Debug.Log("GameplayDirector.PlayerForward collegato alla camera XR Origin.");
+            }
+
+            // Collega SpawnController se esiste
+            var spawn = UnityEngine.Object.FindFirstObjectByType<SpawnController>();
+            if (spawn != null)
+            {
+                spawn.PlayerForward = cameraGo.transform;
+                Debug.Log("SpawnController.PlayerForward collegato alla camera XR Origin.");
+            }
+
+            // Disabilita DesktopRig se esiste (non serve in VR)
+            var desktopRig = UnityEngine.Object.FindFirstObjectByType<DesktopRig>();
+            if (desktopRig != null)
+            {
+                desktopRig.gameObject.SetActive(false);
+                Debug.Log("DesktopRig disabilitato (non necessario in VR).");
+            }
+
+            // Aggiungi VRFocusManager per prevenire l'apertura automatica di Oculus Dash
+            var focusManager = UnityEngine.Object.FindFirstObjectByType<VRFocusManager>();
+            if (focusManager == null)
+            {
+                var focusManagerGo = new GameObject("VR Focus Manager");
+                focusManagerGo.AddComponent<VRFocusManager>();
+                Debug.Log("VRFocusManager aggiunto per mantenere il focus in VR.");
+            }
+
+            // Aggiungi VRControllerSetup per configurare automaticamente i controller
+            var controllerSetup = UnityEngine.Object.FindFirstObjectByType<VRControllerSetup>();
+            if (controllerSetup == null)
+            {
+                var setupGo = new GameObject("VR Controller Setup");
+                controllerSetup = setupGo.AddComponent<VRControllerSetup>();
+                var saberPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VR/Saber.prefab");
+                if (saberPrefab != null)
+                    controllerSetup.SaberPrefab = saberPrefab;
+                Debug.Log("VRControllerSetup aggiunto per configurare automaticamente i controller XR.");
+            }
+
+            // Aggiungi VRMenu per menu accessibile nel visore
+            var vrMenu = UnityEngine.Object.FindFirstObjectByType<VRMenu>();
+            if (vrMenu == null)
+            {
+                var menuGo = new GameObject("VR Menu");
+                menuGo.AddComponent<VRMenu>();
+                Debug.Log("VRMenu aggiunto per menu accessibile nel visore.");
+            }
+
+            EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
+            Selection.activeGameObject = xrOriginGo;
+            EditorGUIUtility.PingObject(xrOriginGo);
+            
+            Debug.Log("XR Origin (VR) creato e configurato correttamente!\n" +
+                     "- Camera configurata per rendering stereoscopico\n" +
+                     "- TrackedPoseDriver aggiunto per tracking VR\n" +
+                     "- GameplayDirector e SpawnController collegati automaticamente\n" +
+                     "- Per aggiungere i Saber ai controller, crea Left Controller e Right Controller come figli di XR Origin e aggiungi i Saber come loro figli.");
+        }
+
+        [MenuItem(MenuRoot + "/Add Saber to XR Controllers (dopo XR Origin)", false, 16)]
+        static void AddSaberToXRControllers()
+        {
+            var xrOrigin = UnityEngine.Object.FindFirstObjectByType<XROrigin>();
+            if (xrOrigin == null)
+            {
+                Debug.LogWarning("XR Origin non trovato nella scena. Esegui prima 'Add XR Origin (VR) to current scene'.");
+                return;
+            }
+
+            var saberPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VR/Saber.prefab");
+            if (saberPrefab == null)
+            {
+                Debug.LogWarning("Prefab Saber non trovato in Assets/VR/Saber.prefab. Esegui prima 'Create Saber Prefab'.");
+                return;
+            }
+
+            // Cerca o crea Left Controller
+            Transform leftController = null;
+            Transform rightController = null;
+            
+            foreach (Transform child in xrOrigin.transform)
+            {
+                if (child.name.Contains("Left") || child.name.Contains("left"))
+                    leftController = child;
+                if (child.name.Contains("Right") || child.name.Contains("right"))
+                    rightController = child;
+            }
+
+            if (leftController == null)
+            {
+                var leftGo = new GameObject("Left Controller");
+                leftGo.transform.SetParent(xrOrigin.transform, false);
+                leftController = leftGo.transform;
+            }
+
+            if (rightController == null)
+            {
+                var rightGo = new GameObject("Right Controller");
+                rightGo.transform.SetParent(xrOrigin.transform, false);
+                rightController = rightGo.transform;
+            }
+
+            // Aggiungi Saber ai controller se non esistono già
+            if (leftController.GetComponentInChildren<SliceDetector>() == null)
+            {
+                var leftSaber = PrefabUtility.InstantiatePrefab(saberPrefab) as GameObject;
+                leftSaber.name = "Left Saber";
+                leftSaber.transform.SetParent(leftController, false);
+                leftSaber.transform.localPosition = Vector3.zero;
+                leftSaber.transform.localRotation = Quaternion.identity;
+                
+                var sliceDetector = leftSaber.GetComponent<SliceDetector>();
+                if (sliceDetector != null)
+                {
+                    sliceDetector.SaberLane = 0; // Left lane
+                    var director = UnityEngine.Object.FindFirstObjectByType<GameplayDirector>();
+                    if (director != null)
+                    {
+                        sliceDetector.AudioTimeProvider = director; // AudioTimeProvider è MonoBehaviour, non GameObject
+                        sliceDetector.AudioTimeMethodName = "GetAudioTime";
+                    }
+                }
+                Debug.Log("Left Saber aggiunto al Left Controller.");
+            }
+
+            if (rightController.GetComponentInChildren<SliceDetector>() == null)
+            {
+                var rightSaber = PrefabUtility.InstantiatePrefab(saberPrefab) as GameObject;
+                rightSaber.name = "Right Saber";
+                rightSaber.transform.SetParent(rightController, false);
+                rightSaber.transform.localPosition = Vector3.zero;
+                rightSaber.transform.localRotation = Quaternion.identity;
+                
+                var sliceDetector = rightSaber.GetComponent<SliceDetector>();
+                if (sliceDetector != null)
+                {
+                    sliceDetector.SaberLane = 1; // Right lane
+                    var director = UnityEngine.Object.FindFirstObjectByType<GameplayDirector>();
+                    if (director != null)
+                    {
+                        sliceDetector.AudioTimeProvider = director; // AudioTimeProvider è MonoBehaviour, non GameObject
+                        sliceDetector.AudioTimeMethodName = "GetAudioTime";
+                    }
+                }
+                Debug.Log("Right Saber aggiunto al Right Controller.");
+            }
+
+            EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
+            Debug.Log("Saber aggiunti ai controller XR. Nota: i controller verranno posizionati automaticamente da XR quando il visore è collegato.");
         }
 
         [MenuItem(MenuRoot + "/Add Scenes to Build Settings", false, 30)]
@@ -884,12 +1153,12 @@ namespace BeatSaberAlefy.Editor
 
         static void EnsureEventSystem()
         {
-            var existing = Object.FindFirstObjectByType<EventSystem>();
+            var existing = UnityEngine.Object.FindFirstObjectByType<EventSystem>();
             if (existing != null)
             {
                 if (existing.GetComponent<StandaloneInputModule>() != null)
                 {
-                    Object.DestroyImmediate(existing.GetComponent<StandaloneInputModule>());
+                    UnityEngine.Object.DestroyImmediate(existing.GetComponent<StandaloneInputModule>());
                     existing.gameObject.AddComponent<InputSystemUIInputModule>();
                     Debug.Log("EventSystem: sostituito StandaloneInputModule con InputSystemUIInputModule (nuovo Input System).");
                 }
